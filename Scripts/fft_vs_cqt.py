@@ -67,7 +67,7 @@ def main(transform: str):
     signal = np.stack(signal_list)
     signal = np.sum(signal, axis=0)
 
-    if transform == 'fft':
+    if transform == 'stft':
         S = np.abs(librosa.stft(signal))
         y_axis_type = 'fft'
     elif transform == 'cqt':
@@ -88,9 +88,12 @@ def main(transform: str):
             bins_per_octave=24,
             y_axis=y_axis_type, x_axis='time', ax=ax)
 
-    ax.set_title('Power spectrogram')
-    fig.colorbar(img, ax=ax, format="%+2.0f dB")
+    ax.set_title(f"{transform.upper()} Spectrogram")
+    ax.set_xlabel("Time (s)")
+    ax.set_ylabel("Frequency (Hz)")
 
+    # fig.colorbar(img, ax=ax, format="%+2.0f dB")
+    fig.tight_layout()
     fig.show()
 
     # show the graph until dismissed
@@ -102,9 +105,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Compare FFT output against CQT")
     parser.add_argument(
             'transform',
-            default='fft',
+            default='stft',
             type=str,
-            choices=['fft', 'cqt'],
+            choices=['stft', 'cqt'],
             help="Transform type")
 
     args = parser.parse_args()
